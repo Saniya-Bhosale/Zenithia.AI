@@ -4,12 +4,10 @@ Werkzeug==3.0.1
 
 # Database - MySQL Support
 Flask-MySQLdb==2.0.0
-pymysql==1.1.0
-cryptography==41.0.7
+mysqlclient==2.2.0
 
 # WSGI Server for Production (Required for Render)
 gunicorn==21.2.0
 
 # Additional Dependencies
 python-dotenv==1.0.0
-mysqlclient==2.2.0

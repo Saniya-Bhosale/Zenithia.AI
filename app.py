@@ -20,15 +20,6 @@ app.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD", "root")
 app.config["MYSQL_DB"] = os.getenv("MYSQL_DB", "zenithia_ai_db")
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
-
-
-# Optional: Use PyMySQL as MySQLdb if mysqlclient fails
-try:
-    import pymysql
-    pymysql.install_as_MySQLdb()
-except ImportError:
-    pass
-
 mysql = MySQL(app)
 
 def login_required(f):
