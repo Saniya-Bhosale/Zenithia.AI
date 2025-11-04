@@ -6,10 +6,10 @@ from functools import wraps
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here_change_in_production"
 
-app.config['MYSQL_HOST'] = 'saniyabhosale.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'saniyabhosale'
-app.config['MYSQL_PASSWORD'] = 'rootroot'
-app.config['MYSQL_DB'] = 'saniyabhosale$zenithia_ai_db'
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "root"
+app.config["MYSQL_PASSWORD"] = "root"
+app.config["MYSQL_DB"] = "zenithia_ai_db"
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
@@ -433,4 +433,4 @@ def logout():
     return redirect(url_for("home"))
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
