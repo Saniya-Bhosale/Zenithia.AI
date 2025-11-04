@@ -24,7 +24,7 @@
 ### Option A: GitHub से (Recommended)
 
 ```bash
-# 1. अपना code GitHub पर push करें
+https://github.com/Saniya-Bhosale/# 1. अपना code GitHub पर push करें
 git init
 git add .
 git commit -m "Initial commit"
