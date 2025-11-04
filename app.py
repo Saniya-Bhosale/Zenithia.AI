@@ -2,15 +2,32 @@
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key_here_change_in_production"
 
-app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "root"
-app.config["MYSQL_DB"] = "zenithia_ai_db"
+# Secret key from environment variable
+app.secret_key = os.getenv("SECRET_KEY", "your_secret_key_here_change_in_production")
+
+# MySQL Configuration from environment variables
+app.config["MYSQL_HOST"] = os.getenv("MYSQL_HOST", "localhost")
+app.config["MYSQL_USER"] = os.getenv("MYSQL_USER", "root")
+app.config["MYSQL_PASSWORD"] = os.getenv("MYSQL_PASSWORD", "root")
+app.config["MYSQL_DB"] = os.getenv("MYSQL_DB", "zenithia_ai_db")
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
+
+
+
+# Optional: Use PyMySQL as MySQLdb if mysqlclient fails
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    pass
 
 mysql = MySQL(app)
 
@@ -433,4 +450,8 @@ def logout():
     return redirect(url_for("home"))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Get port from environment variable (for deployment platforms)
+    port = int(os.getenv("PORT", 5000))
+    # Check if running in production
+    debug_mode = os.getenv("FLASK_ENV") != "production"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
