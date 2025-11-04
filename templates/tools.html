@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} Tools - Zenithia.AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="display-3 fw-bold text-white">{{ category }} Tools</h1>
+                <p class="lead text-white">Discover the best AI tools for {{ category.lower() }}</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        {% if tools %}
+        <!-- Search Bar -->
+        <div class="row mb-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="input-group input-group-lg shadow-sm">
+                    <span class="input-group-text bg-white">
+                        <i class="fas fa-search text-primary"></i>
+                    </span>
+                    <input type="text" class="form-control" id="toolSearch" placeholder="Search tools by name, pricing, or features..." onkeyup="searchTools()">
+                    <button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+                <div class="mt-2 text-center">
+                    <small class="text-muted">💡 Tip: Search for "free", "freemium", or "paid" to filter by pricing</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="row mb-4">
+            <div class="col-lg-12 text-center">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-success filter-btn" onclick="filterTools('all')">
+                        <i class="fas fa-list"></i> All (<span id="count-all">{{ tools|length }}</span>)
+                    </button>
+                    <button type="button" class="btn btn-outline-success filter-btn" onclick="filterTools('Free')">
+                        <i class="fas fa-gift"></i> Free (<span id="count-free">0</span>)
+                    </button>
+                    <button type="button" class="btn btn-outline-primary filter-btn" onclick="filterTools('Freemium')">
+                        <i class="fas fa-star-half-alt"></i> Freemium (<span id="count-freemium">0</span>)
+                    </button>
+                    <button type="button" class="btn btn-outline-warning filter-btn" onclick="filterTools('Paid')">
+                        <i class="fas fa-credit-card"></i> Paid (<span id="count-paid">0</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Count -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <h4 class="text-muted">
+                    <span id="visibleCount">{{ tools|length }}</span> of {{ tools|length }} tools displayed
+                </h4>
+            </div>
+        </div>
+
+        <div class="row g-4" id="toolsContainer">
+            {% for tool in tools %}
+            <div class="col-md-6 col-lg-4 tool-item" data-pricing="{{ tool['pricing'] if tool['pricing'] else 'Unknown' }}">
+                <div class="tool-card h-100">
+                    <div class="tool-image">
+                        <img src="{{ tool['image_url'] }}" alt="{{ tool['name'] }}" onerror="this.src='https://via.placeholder.com/300x200?text={{ tool['name'] }}'">
+                        <!-- Pricing Badge -->
+                        {% if tool['pricing'] %}
+                        <div class="pricing-badge pricing-{{ tool['pricing'].lower() }}">
+                            {% if tool['pricing'] == 'Free' %}
+                                <i class="fas fa-gift"></i> Free
+                            {% elif tool['pricing'] == 'Freemium' %}
+                                <i class="fas fa-star-half-alt"></i> Freemium
+                            {% elif tool['pricing'] == 'Paid' %}
+                                <i class="fas fa-credit-card"></i> Paid
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="tool-content">
+                        <h4>{{ tool['name'] }}</h4>
+                        <p class="tool-description">{{ tool['description'][:100] }}{% if tool['description']|length > 100 %}...{% endif %}</p>
+                        
+                        <!-- Features/Pricing Info -->
+                        {% if tool['features'] %}
+                        <div class="tool-features">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> 
+                                {{ tool['features'][:120] }}{% if tool['features']|length > 120 %}...{% endif %}
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="tool-category-badge">
+                            <span class="badge bg-primary">{{ tool['category'] }}</span>
+                        </div>
+                    </div>
+                    <div class="tool-actions">
+                        <a href="{{ url_for('tool_detail', id=tool['id']) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-info-circle"></i> More Info
+                        </a>
+                        <a href="{{ tool['tool_link'] }}" target="_blank" class="btn btn-primary-custom btn-sm">
+                            <i class="fas fa-external-link-alt"></i> Visit Tool
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- No Results Message -->
+        <div class="row" id="noResults" style="display: none;">
+            <div class="col-lg-12">
+                <div class="alert alert-warning text-center">
+                    <i class="fas fa-search fa-3x mb-3"></i>
+                    <h4>No tools found</h4>
+                    <p>Try adjusting your search or filter criteria</p>
+                    <button class="btn btn-primary-custom mt-3" onclick="clearSearch()">
+                        <i class="fas fa-redo"></i> Show All Tools
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle fa-3x mb-3"></i>
+                    <h4>No tools found in this category</h4>
+                    <p>Check back soon for new additions!</p>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary-custom mt-3">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Search and Filter JavaScript -->
+<script>
+// Count tools by pricing on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCounts();
+});
+
+function searchTools() {
+    let input = document.getElementById('toolSearch');
+    let filter = input.value.toUpperCase();
+    let container = document.getElementById('toolsContainer');
+    let tools = container.getElementsByClassName('tool-item');
+    let visibleCount = 0;
+    
+    for (let i = 0; i < tools.length; i++) {
+        let toolCard = tools[i];
+        let toolName = toolCard.getElementsByTagName('h4')[0].textContent;
+        let toolDesc = toolCard.getElementsByClassName('tool-description')[0].textContent;
+        let toolFeatures = toolCard.getElementsByClassName('tool-features')[0];
+        let toolPricing = toolCard.getAttribute('data-pricing');
+        let featuresText = toolFeatures ? toolFeatures.textContent : '';
+        
+        let searchText = toolName + ' ' + toolDesc + ' ' + featuresText + ' ' + toolPricing;
+        
+        if (searchText.toUpperCase().indexOf(filter) > -1) {
+            toolCard.style.display = '';
+            visibleCount++;
+        } else {
+            toolCard.style.display = 'none';
+        }
+    }
+    
+    // Update visible count
+    document.getElementById('visibleCount').textContent = visibleCount;
+    
+    // Show/hide no results message
+    let noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+        container.style.display = 'none';
+    } else {
+        noResults.style.display = 'none';
+        container.style.display = 'flex';
+    }
+}
+
+function filterTools(pricing) {
+    let container = document.getElementById('toolsContainer');
+    let tools = container.getElementsByClassName('tool-item');
+    let visibleCount = 0;
+    let searchInput = document.getElementById('toolSearch');
+    searchInput.value = ''; // Clear search
+    
+    // Update active button
+    let buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.closest('.filter-btn').classList.add('active');
+    
+    for (let i = 0; i < tools.length; i++) {
+        let toolPricing = tools[i].getAttribute('data-pricing');
+        
+        if (pricing === 'all' || toolPricing === pricing) {
+            tools[i].style.display = '';
+            visibleCount++;
+        } else {
+            tools[i].style.display = 'none';
+        }
+    }
+    
+    // Update visible count
+    document.getElementById('visibleCount').textContent = visibleCount;
+    
+    // Show/hide no results
+    let noResults = document.getElementById('noResults');
+    if (visibleCount === 0) {
+        noResults.style.display = 'block';
+        container.style.display = 'none';
+    } else {
+        noResults.style.display = 'none';
+        container.style.display = 'flex';
+    }
+}
+
+function clearSearch() {
+    document.getElementById('toolSearch').value = '';
+    searchTools();
+    
+    // Reset filter buttons
+    let buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+}
+
+function updateCounts() {
+    let tools = document.getElementsByClassName('tool-item');
+    let freeCoun = 0, freemiumCount = 0, paidCount = 0;
+    
+    for (let i = 0; i < tools.length; i++) {
+        let pricing = tools[i].getAttribute('data-pricing');
+        if (pricing === 'Free') freeCount++;
+        else if (pricing === 'Freemium') freemiumCount++;
+        else if (pricing === 'Paid') paidCount++;
+    }
+    
+    document.getElementById('count-free').textContent = freeCount;
+    document.getElementById('count-freemium').textContent = freemiumCount;
+    document.getElementById('count-paid').textContent = paidCount;
+}
+</script>
+
+<style>
+/* Search Bar Styles */
+.input-group-lg .form-control {
+    border-radius: 50px 0 0 50px !important;
+    border: 2px solid #e0e0e0;
+}
+
+.input-group-lg .input-group-text {
+    border-radius: 50px 0 0 0 !important;
+    border: 2px solid #e0e0e0;
+    border-right: none;
+}
+
+.input-group-lg .btn {
+    border-radius: 0 50px 50px 0 !important;
+    border: 2px solid #e0e0e0;
+    border-left: none;
+}
+
+/* Filter Button Styles */
+.filter-btn {
+    margin: 0 5px;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.filter-btn.active {
+    background-color: #6C5CE7;
+    color: white;
+    border-color: #6C5CE7;
+}
+
+/* Pricing Badge Styles */
+.pricing-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.pricing-free {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+}
+
+.pricing-freemium {
+    background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+    color: white;
+}
+
+.pricing-paid {
+    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+    color: white;
+}
+
+/* Tool Features Styles */
+.tool-features {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    border-left: 3px solid #6C5CE7;
+}
+
+.tool-features small {
+    line-height: 1.6;
+    display: block;
+}
+
+/* Enhance tool card for better height */
+.tool-card {
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-card .tool-content {
+    flex-grow: 1;
+}
+</style>
+
+{% endblock %}

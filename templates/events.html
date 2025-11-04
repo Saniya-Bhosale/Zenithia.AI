@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Events - Zenithia.AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="display-3 fw-bold text-white">AI Events</h1>
+        <p class="lead text-white">Stay updated with the latest AI happenings</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-12 text-center">
+                <h2 class="fw-bold mb-4">Upcoming Events, Webinars & Hackathons</h2>
+                <p class="lead text-muted">Join our community in exploring the latest AI innovations</p>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <!-- Search Box -->
+                            <div class="col-md-6">
+                                <label for="searchInput" class="form-label fw-bold">
+                                    <i class="fas fa-search"></i> Search Events
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="searchInput" 
+                                       placeholder="Search by title or description..."
+                                       onkeyup="filterEvents()">
+                            </div>
+                            
+                            <!-- Category Filter -->
+                            <div class="col-md-6">
+                                <label for="categoryFilter" class="form-label fw-bold">
+                                    <i class="fas fa-filter"></i> Filter by Category
+                                </label>
+                                <select class="form-select" id="categoryFilter" onchange="filterEvents()">
+                                    <option value="All">All Categories</option>
+                                    <option value="Webinar">Webinars</option>
+                                    <option value="Hackathon">Hackathons</option>
+                                    <option value="Product Launch">Product Launches</option>
+                                    <option value="Meetup">Meetups</option>
+                                    <option value="Conference">Conferences</option>
+                                    <option value="Workshop">Workshops</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Results Count -->
+                        <div class="mt-3">
+                            <span id="resultsCount" class="badge bg-primary fs-6"></span>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="resetFilters()">
+                                <i class="fas fa-redo"></i> Reset Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Container -->
+        <div class="row g-4" id="eventsContainer">
+            <!-- Events will be dynamically inserted here by JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div class="row" id="noResults" style="display: none;">
+            <div class="col-lg-12">
+                <div class="alert alert-warning text-center">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <h4>No events found</h4>
+                    <p>Try adjusting your search or filter criteria.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Event Categories Section -->
+        <div class="row mt-5">
+            <div class="col-lg-12">
+                <h3 class="fw-bold mb-4">Featured Event Categories</h3>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="event-category-card" onclick="quickFilter('Webinar')" style="cursor: pointer;">
+                    <i class="fas fa-chalkboard-teacher fa-3x mb-3 text-primary"></i>
+                    <h5>Webinars</h5>
+                    <p>Expert-led sessions on AI trends and technologies</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="event-category-card" onclick="quickFilter('Hackathon')" style="cursor: pointer;">
+                    <i class="fas fa-code fa-3x mb-3 text-success"></i>
+                    <h5>Hackathons</h5>
+                    <p>Build innovative AI solutions with fellow developers</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="event-category-card" onclick="quickFilter('Product Launch')" style="cursor: pointer;">
+                    <i class="fas fa-rocket fa-3x mb-3 text-warning"></i>
+                    <h5>Product Launches</h5>
+                    <p>Be the first to know about new AI tool releases</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="event-category-card" onclick="quickFilter('Meetup')" style="cursor: pointer;">
+                    <i class="fas fa-users fa-3x mb-3 text-info"></i>
+                    <h5>Meetups</h5>
+                    <p>Network with AI enthusiasts and professionals</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for Dynamic Event Display and Filtering -->
+<script>
+    // Events Array - Data from Flask backend
+    const eventsData = [
+        {% if events %}
+            {% for event in events %}
+            {
+                id: {{ event['id'] }},
+                title: {{ event['title']|tojson }},
+                date: new Date({{ event['date'].strftime('%Y-%m-%d')|tojson }}),
+                dateString: {{ event['date'].strftime('%Y-%m-%d')|tojson }},
+                description: {{ event['description']|tojson }},
+                link: {{ event['link']|tojson }},
+                category: {{ event.get('category', 'General')|tojson }}
+            }{{ "," if not loop.last else "" }}
+            {% endfor %}
+        {% endif %}
+    ];
+
+    // Store original events array
+    let allEvents = [...eventsData];
+    let filteredEvents = [...allEvents];
+
+    // Function to format date
+    function formatDate(date) {
+        const options = { day: '2-digit', month: 'short' };
+        return {
+            day: date.toLocaleDateString('en-US', { day: '2-digit' }),
+            month: date.toLocaleDateString('en-US', { month: 'short' })
+        };
+    }
+
+    // Function to get category badge color
+    function getCategoryColor(category) {
+        const colors = {
+            'Webinar': 'primary',
+            'Hackathon': 'success',
+            'Product Launch': 'warning',
+            'Meetup': 'info',
+            'Conference': 'danger',
+            'Workshop': 'secondary',
+            'General': 'dark'
+        };
+        return colors[category] || 'dark';
+    }
+
+    // Function to render events
+    function renderEvents(events) {
+        const container = document.getElementById('eventsContainer');
+        const noResults = document.getElementById('noResults');
+        const resultsCount = document.getElementById('resultsCount');
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        if (events.length === 0) {
+            container.style.display = 'none';
+            noResults.style.display = 'block';
+            resultsCount.textContent = 'No events found';
+            return;
+        }
+        
+        container.style.display = 'flex';
+        noResults.style.display = 'none';
+        resultsCount.textContent = `${events.length} event${events.length !== 1 ? 's' : ''} found`;
+        
+        // Sort events by date (upcoming first)
+        events.sort((a, b) => a.date - b.date);
+        
+        // Render each event
+        events.forEach(event => {
+            const dateInfo = formatDate(event.date);
+            const categoryColor = getCategoryColor(event.category);
+            
+            const eventCard = `
+                <div class="col-md-6 col-lg-4 mb-4 event-item" data-category="${event.category}">
+                    <div class="event-card" style="animation: fadeIn 0.5s ease-in;">
+                        <div class="event-date">
+                            <span class="day">${dateInfo.day}</span>
+                            <span class="month">${dateInfo.month}</span>
+                        </div>
+                        <div class="event-content">
+                            <div class="mb-2">
+                                <span class="badge bg-${categoryColor}">${event.category}</span>
+                            </div>
+                            <h4>${event.title}</h4>
+                            <p>${event.description}</p>
+                            ${event.link ? `
+                                <a href="${event.link}" target="_blank" class="btn btn-sm btn-primary-custom">
+                                    <i class="fas fa-external-link-alt"></i> Learn More
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML += eventCard;
+        });
+    }
+
+    // Function to filter events
+    function filterEvents() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('categoryFilter').value;
+        
+        filteredEvents = allEvents.filter(event => {
+            // Check search term
+            const matchesSearch = searchTerm === '' || 
+                                  event.title.toLowerCase().includes(searchTerm) ||
+                                  event.description.toLowerCase().includes(searchTerm);
+            
+            // Check category
+            const matchesCategory = selectedCategory === 'All' || 
+                                    event.category === selectedCategory;
+            
+            return matchesSearch && matchesCategory;
+        });
+        
+        renderEvents(filteredEvents);
+    }
+
+    // Function for quick category filter
+    function quickFilter(category) {
+        document.getElementById('categoryFilter').value = category;
+        document.getElementById('searchInput').value = '';
+        filterEvents();
+        
+        // Smooth scroll to events section
+        document.getElementById('eventsContainer').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+
+    // Function to reset filters
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = 'All';
+        filterEvents();
+    }
+
+    // Initialize events on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        renderEvents(allEvents);
+    });
+
+    // Add CSS animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .event-item {
+            transition: transform 0.3s ease;
+        }
+        
+        .event-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .event-category-card {
+            transition: all 0.3s ease;
+        }
+        
+        .event-category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}

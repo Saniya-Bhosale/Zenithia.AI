@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tool['name'] }} - Zenithia.AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <a href="{{ url_for('tools', category=tool['category']) }}" class="btn btn-light mb-3">
+            <i class="fas fa-arrow-left"></i> Back to {{ tool['category'] }} Tools
+        </a>
+        <h1 class="display-3 fw-bold text-white">{{ tool['name'] }}</h1>
+        <p class="lead text-white">{{ tool['category'] }} Tool</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tool-detail-card mb-4">
+                    <div class="position-relative">
+                        <img src="{{ tool['image_url'] }}" alt="{{ tool['name'] }}" class="tool-detail-image" onerror="this.src='https://via.placeholder.com/800x400?text={{ tool['name'] }}'">
+                        <!-- Pricing Badge -->
+                        {% if tool['pricing'] %}
+                        <div class="pricing-badge-large pricing-{{ tool['pricing'].lower() }}">
+                            {% if tool['pricing'] == 'Free' %}
+                                <i class="fas fa-gift"></i> Completely FREE
+                            {% elif tool['pricing'] == 'Freemium' %}
+                                <i class="fas fa-star-half-alt"></i> FREE to Start
+                            {% elif tool['pricing'] == 'Paid' %}
+                                <i class="fas fa-credit-card"></i> Paid Subscription
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="tool-detail-content">
+                        <h2 class="fw-bold mb-4">About {{ tool['name'] }}</h2>
+                        <p class="lead">{{ tool['description'] }}</p>
+
+                        <hr class="my-4">
+
+                        <!-- Pricing & Access Information -->
+                        {% if tool['features'] or tool['pricing'] %}
+                        <div class="pricing-info-box mb-4">
+                            <h3 class="fw-bold mb-3">
+                                <i class="fas fa-money-bill-wave text-success"></i> Pricing & Access
+                            </h3>
+                            {% if tool['pricing'] %}
+                            <div class="alert alert-{{ 'success' if tool['pricing'] == 'Free' else 'info' if tool['pricing'] == 'Freemium' else 'warning' }} border-{{ 'success' if tool['pricing'] == 'Free' else 'info' if tool['pricing'] == 'Freemium' else 'warning' }}">
+                                <h5 class="alert-heading">
+                                    {% if tool['pricing'] == 'Free' %}
+                                        🎉 Completely Free to Use!
+                                    {% elif tool['pricing'] == 'Freemium' %}
+                                        🌟 Free Plan Available
+                                    {% elif tool['pricing'] == 'Paid' %}
+                                        💳 Paid Subscription Required
+                                    {% endif %}
+                                </h5>
+                                {% if tool['features'] %}
+                                <p class="mb-0">{{ tool['features'] }}</p>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <hr class="my-4">
+                        {% endif %}
+
+                        <h3 class="fw-bold mb-3">Key Features</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check-circle text-success"></i> Advanced AI capabilities</li>
+                            <li><i class="fas fa-check-circle text-success"></i> User-friendly interface</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Fast and reliable performance</li>
+                            <li><i class="fas fa-check-circle text-success"></i> Regular updates and improvements</li>
+                        </ul>
+
+                        <hr class="my-4">
+
+                        <h3 class="fw-bold mb-3">Getting Started</h3>
+                        <p>To start using {{ tool['name'] }}, simply click the button below to visit the official website. 
+                        {% if tool['pricing'] == 'Free' %}
+                            This tool is completely free to use!
+                        {% elif tool['pricing'] == 'Freemium' %}
+                            You can start with the free plan, and upgrade later if needed.
+                        {% elif tool['pricing'] == 'Paid' %}
+                            A subscription is required, but many offer free trials.
+                        {% else %}
+                            Check the pricing details on their official website.
+                        {% endif %}
+                        </p>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="{{ tool['tool_link'] }}" target="_blank" class="btn btn-primary-custom btn-lg">
+                                <i class="fas fa-external-link-alt"></i> Visit {{ tool['name'] }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="tool-sidebar">
+                    <div class="sidebar-card mb-4">
+                        <h4 class="fw-bold mb-3">Tool Information</h4>
+                        <div class="info-item">
+                            <strong>Category:</strong>
+                            <span class="badge bg-primary">{{ tool['category'] }}</span>
+                        </div>
+                        {% if tool['pricing'] %}
+                        <div class="info-item">
+                            <strong>Pricing Model:</strong>
+                            <span class="badge bg-{{ 'success' if tool['pricing'] == 'Free' else 'info' if tool['pricing'] == 'Freemium' else 'warning' }}">
+                                {% if tool['pricing'] == 'Free' %}
+                                    <i class="fas fa-gift"></i> Free
+                                {% elif tool['pricing'] == 'Freemium' %}
+                                    <i class="fas fa-star-half-alt"></i> Freemium
+                                {% elif tool['pricing'] == 'Paid' %}
+                                    <i class="fas fa-credit-card"></i> Paid
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <strong>Added:</strong>
+                            <span>{{ tool['created_at'].strftime('%B %d, %Y') }}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Status:</strong>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Quick Reference -->
+                    {% if tool['pricing'] %}
+                    <div class="sidebar-card mb-4 pricing-sidebar">
+                        <h4 class="fw-bold mb-3">💰 Quick Pricing Guide</h4>
+                        {% if tool['pricing'] == 'Free' %}
+                        <div class="alert alert-success mb-0">
+                            <h6><i class="fas fa-check-circle"></i> No Cost</h6>
+                            <small>This tool is completely free to use. No credit card required!</small>
+                        </div>
+                        {% elif tool['pricing'] == 'Freemium' %}
+                        <div class="alert alert-info mb-0">
+                            <h6><i class="fas fa-info-circle"></i> Free + Paid Options</h6>
+                            <small>Start free, upgrade for more features. Free tier available without credit card.</small>
+                        </div>
+                        {% elif tool['pricing'] == 'Paid' %}
+                        <div class="alert alert-warning mb-0">
+                            <h6><i class="fas fa-exclamation-circle"></i> Paid Subscription</h6>
+                            <small>Requires payment. Most offer free trials. Credit card may be needed.</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="sidebar-card mb-4">
+                        <h4 class="fw-bold mb-3">Quick Actions</h4>
+                        <div class="d-grid gap-2">
+                            <a href="{{ tool['tool_link'] }}" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-external-link-alt"></i> Visit Website
+                            </a>
+                            <a href="{{ url_for('tools', category=tool['category']) }}" class="btn btn-outline-primary">
+                                <i class="fas fa-list"></i> More {{ tool['category'] }} Tools
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h4 class="fw-bold mb-3">Share This Tool</h4>
+                        <div class="share-buttons">
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-info btn-sm">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-link"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Pricing Badge Large */
+.pricing-badge-large {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pricing-free {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+}
+
+.pricing-freemium {
+    background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+    color: white;
+}
+
+.pricing-paid {
+    background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+    color: white;
+}
+
+/* Pricing Info Box */
+.pricing-info-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid #dee2e6;
+}
+
+.pricing-info-box h3 {
+    color: #2d3436;
+}
+
+.pricing-info-box .alert {
+    border-width: 2px;
+    font-size: 0.95rem;
+}
+
+/* Pricing Sidebar */
+.pricing-sidebar {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: 2px solid #e9ecef;
+}
+
+.pricing-sidebar .alert {
+    border-radius: 10px;
+}
+
+.pricing-sidebar h6 {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+</style>
+
+{% endblock %}

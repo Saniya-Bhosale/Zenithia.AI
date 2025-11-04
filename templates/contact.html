@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Zenithia.AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="display-3 fw-bold text-white">Contact Us</h1>
+        <p class="lead text-white">We'd love to hear from you</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <h2 class="fw-bold mb-4">Get In Touch</h2>
+                <p class="lead mb-4">Have questions or suggestions? Send us a message and we'll get back to you as soon as possible.</p>
+                
+                <div class="contact-info">
+                    <div class="contact-item mb-3">
+                        <i class="fas fa-envelope fa-2x text-primary me-3"></i>
+                        <div>
+                            <h5>Email</h5>
+                            <p>contact@zenithia.ai</p>
+                        </div>
+                    </div>
+                    <div class="contact-item mb-3">
+                        <i class="fas fa-phone fa-2x text-primary me-3"></i>
+                        <div>
+                            <h5>Phone</h5>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item mb-3">
+                        <i class="fas fa-map-marker-alt fa-2x text-primary me-3"></i>
+                        <div>
+                            <h5>Address</h5>
+                            <p>123 AI Street, Tech Valley, CA 94000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="contact-form-wrapper">
+                    <form method="POST" action="{{ url_for('contact') }}" class="contact-form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom btn-lg w-100">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="map-section py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold mb-4 text-center">Connect With Us</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <div class="social-connect">
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-facebook fa-3x"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-twitter fa-3x"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-linkedin fa-3x"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-instagram fa-3x"></i>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-github fa-3x"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

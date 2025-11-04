@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}About - Zenithia.AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="display-3 fw-bold text-white">About Zenithia.AI</h1>
+        <p class="lead text-white">Your Gateway to the AI Revolution</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6">
+                <h2 class="display-5 fw-bold mb-4">Our Mission</h2>
+                <p class="lead">
+                    Zenithia.AI is dedicated to democratizing access to artificial intelligence tools. We believe that everyone should have the opportunity to leverage AI technology to enhance their creativity, productivity, and innovation.
+                </p>
+                <p>
+                    Our platform serves as a comprehensive directory where users can discover, explore, and learn about the latest and most powerful AI tools across multiple domains.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-image">
+                    <i class="fas fa-rocket fa-10x text-primary"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold text-primary">120+</h2>
+                    <p class="lead">AI Tools Listed</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold text-primary">6</h2>
+                    <p class="lead">Categories</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <h2 class="display-4 fw-bold text-primary">1000+</h2>
+                    <p class="lead">Active Users</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="display-5 fw-bold mb-4 text-center">What We Offer</h2>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                    <h4>Comprehensive Discovery</h4>
+                    <p>Browse through our extensive collection of AI tools organized by category. From writing assistants to code generators, we've got you covered.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-info-circle fa-3x text-primary mb-3"></i>
+                    <h4>Detailed Information</h4>
+                    <p>Get in-depth information about each tool, including features, use cases, and direct links to try them out.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                    <h4>AI Events & Updates</h4>
+                    <p>Stay informed about the latest AI webinars, hackathons, and tool releases in our events section.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="feature-box">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h4>Community Driven</h4>
+                    <p>Join a community of AI enthusiasts and professionals exploring the cutting edge of artificial intelligence.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-lg-12 text-center">
+                <h2 class="display-5 fw-bold mb-4">Our Vision</h2>
+                <p class="lead mb-4">
+                    We envision a future where AI tools are accessible to everyone, empowering individuals and organizations to achieve more than ever before. Zenithia.AI is your trusted partner in navigating the ever-evolving landscape of artificial intelligence.
+                </p>
+                <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+                    <i class="fas fa-rocket"></i> Join Us Today
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

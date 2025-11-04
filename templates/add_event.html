@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Add Event - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="fas fa-calendar-plus"></i> Add New Event</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('add_event') }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Event Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                   placeholder="e.g., AI Summit 2025" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Event Date *</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-control" id="category" name="category">
+                                <option value="Webinar">Webinar</option>
+                                <option value="Hackathon">Hackathon</option>
+                                <option value="Product Launch">Product Launch</option>
+                                <option value="Meetup">Meetup</option>
+                                <option value="Conference">Conference</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="5" placeholder="Enter event description..." required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="link" class="form-label">Event Link (Optional)</label>
+                            <input type="url" class="form-control" id="link" name="link" 
+                                   placeholder="https://example.com/event">
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Add Event
+                            </button>
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

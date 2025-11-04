@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Zenithia.AI{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4 animate-fade-in">
+                    Welcome to <span class="text-gradient">Zenithia.AI</span>
+                </h1>
+                <p class="lead mb-4 animate-slide-up">
+                    Your all-in-one hub for discovering the best AI tools across writing, coding, image generation, video production, voice synthesis, and productivity.
+                </p>
+                <div class="animate-slide-up delay-1">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg me-3">
+                        <i class="fas fa-rocket"></i> Get Started Free
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image animate-float">
+                    <i class="fas fa-brain fa-10x text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold">Why Choose Zenithia.AI?</h2>
+            <p class="lead text-muted">Explore AI tools designed to boost your productivity and creativity</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Curated Collection</h4>
+                    <p>Access hand-picked AI tools across 6 major categories, all in one place.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Easy Discovery</h4>
+                    <p>Find the perfect AI tool for your needs with our intuitive category system.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Trusted Resources</h4>
+                    <p>Every tool is verified and reviewed to ensure quality and reliability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Preview -->
+<section class="categories-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold">Explore AI Tool Categories</h2>
+            <p class="lead text-muted">Discover tools for every use case</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #FF6B6B">
+                    <i class="fas fa-pen-fancy fa-3x mb-3"></i>
+                    <h4>Writing Tools</h4>
+                    <p>AI-powered content creation and writing assistants</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #4ECDC4">
+                    <i class="fas fa-code fa-3x mb-3"></i>
+                    <h4>Coding Tools</h4>
+                    <p>AI code completion and development assistants</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #FFE66D">
+                    <i class="fas fa-image fa-3x mb-3"></i>
+                    <h4>Image Generation</h4>
+                    <p>Create stunning visuals with AI image generators</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #95E1D3">
+                    <i class="fas fa-video fa-3x mb-3"></i>
+                    <h4>Video Tools</h4>
+                    <p>AI-powered video editing and creation tools</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #AA96DA">
+                    <i class="fas fa-microphone fa-3x mb-3"></i>
+                    <h4>Voice Tools</h4>
+                    <p>Text-to-speech and voice synthesis solutions</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="category-preview-card" style="--card-color: #FCBAD3">
+                    <i class="fas fa-tasks fa-3x mb-3"></i>
+                    <h4>Productivity</h4>
+                    <p>Boost efficiency with AI productivity tools</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container text-center">
+        <h2 class="display-4 fw-bold text-white mb-4">Ready to Explore AI Tools?</h2>
+        <p class="lead text-white mb-4">Join thousands of users discovering the best AI tools</p>
+        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-user-plus"></i> Create Free Account
+        </a>
+    </div>
+</section>
+{% endblock %}

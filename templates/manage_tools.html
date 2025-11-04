@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Tools - Admin Panel{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="display-4 fw-bold text-white">Manage All Tools</h1>
+        <p class="lead text-white">Edit tools, update links and images</p>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <a href="{{ url_for('add_tool') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Tool
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools by Category -->
+        {% set categories = ['Writing', 'Coding', 'Image', 'Video', 'Voice', 'Productivity'] %}
+        
+        {% for category in categories %}
+            {% set category_tools = tools|selectattr('category', 'equalto', category)|list %}
+            <div class="row mb-5">
+                <div class="col-lg-12">
+                    <div class="card shadow">
+                        <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h4 class="mb-0 text-white">
+                                <i class="fas fa-folder"></i> {{ category }} Tools ({{ category_tools|length }})
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            {% if category_tools %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 5%;">ID</th>
+                                                <th style="width: 10%;">Image</th>
+                                                <th style="width: 20%;">Name</th>
+                                                <th style="width: 35%;">Description</th>
+                                                <th style="width: 15%;">Link</th>
+                                                <th style="width: 15%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for tool in category_tools %}
+                                            <tr>
+                                                <td>{{ tool['id'] }}</td>
+                                                <td>
+                                                    {% if tool['image_url'] %}
+                                                        <img src="{{ tool['image_url'] }}" 
+                                                             alt="{{ tool['name'] }}" 
+                                                             class="img-thumbnail" 
+                                                             style="width: 50px; height: 50px; object-fit: contain;"
+                                                             onerror="this.src='https://via.placeholder.com/50?text=No+Image'">
+                                                    {% else %}
+                                                        <img src="https://via.placeholder.com/50?text=No+Image" 
+                                                             alt="No image" 
+                                                             class="img-thumbnail" 
+                                                             style="width: 50px; height: 50px;">
+                                                    {% endif %}
+                                                </td>
+                                                <td><strong>{{ tool['name'] }}</strong></td>
+                                                <td>
+                                                    <small>{{ tool['description'][:80] }}{% if tool['description']|length > 80 %}...{% endif %}</small>
+                                                </td>
+                                                <td>
+                                                    {% if tool['tool_link'] %}
+                                                        <a href="{{ tool['tool_link'] }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-external-link-alt"></i> Visit
+                                                        </a>
+                                                    {% else %}
+                                                        <span class="text-muted">No link</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url_for('edit_tool', id=tool['id']) }}" 
+                                                       class="btn btn-sm btn-warning" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{{ url_for('delete_tool', id=tool['id']) }}" 
+                                                       class="btn btn-sm btn-danger" title="Delete"
+                                                       onclick="return confirm('Are you sure you want to delete {{ tool.name }}?')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x mb-3 d-block"></i>
+                                    No tools in this category yet
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Summary Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Tools Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-2">
+                                <h6>Total Tools</h6>
+                                <h3 class="text-primary">{{ tools|length }}</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Writing</h6>
+                                <h3 class="text-danger">{{ tools|selectattr('category', 'equalto', 'Writing')|list|length }}</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Coding</h6>
+                                <h3 class="text-info">{{ tools|selectattr('category', 'equalto', 'Coding')|list|length }}</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Image</h6>
+                                <h3 class="text-warning">{{ tools|selectattr('category', 'equalto', 'Image')|list|length }}</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Video</h6>
+                                <h3 class="text-success">{{ tools|selectattr('category', 'equalto', 'Video')|list|length }}</h3>
+                            </div>
+                            <div class="col-md-2">
+                                <h6>Voice & Productivity</h6>
+                                <h3 class="text-secondary">{{ (tools|selectattr('category', 'equalto', 'Voice')|list|length) + (tools|selectattr('category', 'equalto', 'Productivity')|list|length) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

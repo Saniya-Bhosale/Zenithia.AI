@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Zenithia.AI{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3><i class="fas fa-user-shield"></i> Admin Login</h3>
+                </div>
+                <div class="card-body p-5">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('admin_login') }}">
+                        <div class="mb-4">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Admin Email
+                            </label>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" 
+                                   placeholder="admin@zenithia.ai" required>
+                            <small class="text-muted">Default: admin@zenithia.ai</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <input type="password" class="form-control form-control-lg" id="password" name="password" 
+                                   placeholder="Enter admin password" required>
+                            <small class="text-muted">Default: admin123</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Login as Admin
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Regular User?</p>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-user"></i> User Login
+                        </a>
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary ms-2">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Admin Credentials:</strong><br>
+                Email: admin@zenithia.ai<br>
+                Password: admin123
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
